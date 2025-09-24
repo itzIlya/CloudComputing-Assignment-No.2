@@ -1,0 +1,95 @@
+
+
+
+
+
+
+
+========================
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+  -files mapper.py,reducer.py \
+  -mapper mapper.py \
+  -reducer reducer.py \
+  -input /user/ilya/data.csv \
+  -output /user/ilya/output
+
+
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+    -files /tmp/mapper.py,/tmp/reducer.py \
+    -mapper "python3 /tmp/mapper.py" \
+    -reducer "python3 /tmp/reducer.py" \
+    -input /user/ilya/data.csv \
+    -output /user/ilya/output
+
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+    -files /tmp/mapper.py,/tmp/reducer.py \
+    -mapper /tmp/mapper.py \
+    -reducer /tmp/reducer.py \
+    -input /user/ilya/data.csv \
+    -output /user/ilya/output
+
+
+hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+    -files /tmp/mapper.py,/tmp/reducer.py \
+    -mapper "python3 /tmp/mapper.py" \
+    -reducer "python3 /tmp/reducer.py" \
+    -input /user/ilya/data.csv \
+    -output /user/ilya/output
+
+    hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+    -files /tmp/mapper.py,/tmp/reducer.py \
+    -mapper "python3 /tmp/mapper.py" \
+    -reducer "python3 /tmp/reducer.py" \
+    -input /user/ilya/data.csv \
+    -output /user/ilya/output
+
+
+
+docker run -d --name yarn -h yarn -p 8088:8088 -p 8042:8042 --link=hdfs-namenode:hdfs-namenode --link=hdfs-datanode1:hdfs-datanode1 -v $HOME/data/hadoop/hdfs:/data gelog/hadoop start-yarn.sh && docker logs -f yarn
+
+
+
+
+hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.3.6.jar \
+ -input /user/hadoop/input/data.csv \
+  -output /user/hadoop/output \
+  -mapper mapper.py \
+  -reducer reducer.py \
+  -file mapper.py \
+  -file reducer.py
+
+  
+hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+ -files /tmp/reducer.py, /tmp/mapper.py \
+ -input /user/ilya/data.csv \
+  -output /user/ilya/output2 \
+  -mapper /tmp/mapper.py \
+  -reducer /tmp/reducer.py 
+
+  hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+    -files mapper.py,reducer.py \
+    -mapper  mapper.py \
+    -reducer reducer.py \
+    -input /user/ilya/data.csv \
+    -output /user/ilya/output3
+
+ 
+
+hadoop jar $HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+   -files mapper.py,reducer.py \
+    -mapper  mapper.py \
+    -reducer reducer.py \
+    -input /user/ilya/data.csv \
+    -output /user/ilya/output2
+
+docker run --name my-spark-app-container -e SPARK_MASTER_NAME=spark-master -e SPARK_MASTER_PORT=7077 -e ENABLE_INIT_DAEMON=false --network docker-hadoop_default my-spark-app
+
+docker run --name my-spark-app-container -e SPARK_MASTER_NAME=local -e SPARK_MASTER_PORT=7077   -e SPARK_APPLICATION_PYTHON_LOCATION=/app/FederatedAveraging.py -e ENABLE_INIT_DAEMON=false my-spark-app
+
+
+docker run --rm --name my-spark-app --network host    -e SPARK_MASTER_URL=local[*]   -e SPARK_APPLICATION_PYTHON_LOCATION=/app/FederatedAveraging.py my-spark-app
+
+docker run --rm --name my-spark-app --network docker-hadoop_default    -e SPARK_MASTER_URL=spark-master   -e SPARK_APPLICATION_PYTHON_LOCATION=/app/FederatedAveraging.py my-spark-app
+
+
+docker run --rm --name my-spark-app my-spark-app spark-submit --master local[*] /app/FederatedAveraging.py

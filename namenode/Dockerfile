@@ -13,4 +13,14 @@ RUN chmod a+x /run.sh
 
 EXPOSE 9870
 
+# Because this image is Debian 9 (stretch) and EOL, switch to archived repos
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+    echo "deb http://archive.debian.org/debian stretch main contrib non-free" > /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list && \
+    echo 'Acquire::Check-Valid-Until "false";' > /etc/apt/apt.conf.d/99no-check-valid-until && \
+    apt-get update && \
+    apt-get install -y python3 && \
+    apt-get clean
+
+
 CMD ["/run.sh"]
